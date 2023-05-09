@@ -2,14 +2,15 @@ package com.wgc.springboottest.exception;
 
 import com.wgc.springboottest.dto.response.ResultVo;
 import com.wgc.springboottest.utils.ResultCode;
-import org.springframework.web.bind.annotation.ControllerAdvice;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.UndeclaredThrowableException;
 
 /**
@@ -18,27 +19,40 @@ import java.lang.reflect.UndeclaredThrowableException;
  * @Date 2023/4/25
  **/
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler{
 
     @ExceptionHandler({Exception.class})
     @ResponseBody
-    public ResultVo exceptionHandleer(HttpServletRequest httpServletRequest, Exception e){
+    @ResponseStatus(HttpStatus.OK)
+    public ResultVo exceptionHandleer(Exception e){
+        log.error("全局异常信息 ex=" + e.getMessage(), e);
         if(e instanceof UndeclaredThrowableException){
             e = (Exception) ((UndeclaredThrowableException) e).getUndeclaredThrowable();
         }
-        String message = e.getMessage();
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        servletRequestAttributes.getResponse().setHeader("resultCode", "-1");
-        return ResultVo.faild(message);
+        servletRequestAttributes.getResponse().setHeader("resultCode", String.valueOf(ResultCode.INTERNAL_SERVER_ERROR));
+        return ResultVo.faild(ResultCode.INTERNAL_SERVER_ERROR.getCode(), e.getMessage());
     }
 
     @ExceptionHandler({BusinessException.class})
+    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public ResultVo exceptionHandleer(HttpServletRequest httpServletRequest, BusinessException e){
-        String message = e.getMessage();
-        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        servletRequestAttributes.getResponse().setHeader("resultCode", "-2");
-        return ResultVo.faild(-1,message);
+    public ResultVo<?> businessException(BusinessException e) {
+        log.error("业务处理异常信息 ex=" + e.getMessage(), e);
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+        servletRequestAttributes.getResponse().setHeader("resultCode", String.valueOf(e.getResultCode().getCode()));
+        return ResultVo.faild(e.getResultCode().getCode(), e.getMessage(), e.getResultCode().getParams());
+    }
+
+    @ExceptionHandler({FeignException.class})
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public ResultVo<?> feginException(FeignException e) {
+        log.error("fegin调用异常信息 ex=" + e.getMessage(), e);
+        ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
+        servletRequestAttributes.getResponse().setHeader("resultCode", String.valueOf(e.getResultCode().getCode()));
+        return ResultVo.faild(e.getResultCode().getCode(), e.getMessage(), e.getResultCode().getParams());
     }
 
 }

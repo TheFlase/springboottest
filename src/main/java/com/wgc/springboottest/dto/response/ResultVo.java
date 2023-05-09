@@ -23,6 +23,9 @@ public class ResultVo<T> implements Serializable {
     private String message;
     private T data;
 
+    // 参数
+    private Object[] params = null;
+
     public static <T> ResultVo<T> faild() {
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(ResultCode.FAILURE);
@@ -44,6 +47,15 @@ public class ResultVo<T> implements Serializable {
         resultVo.setCode(code);
         resultVo.setState(STATUS_FAILURE);
         resultVo.setMessage(message);
+        return resultVo;
+    }
+
+    public static <T> ResultVo<T> faild(int code, String message, Object... params) {
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(code);
+        resultVo.setState(STATUS_FAILURE);
+        resultVo.setMessage(message);
+        resultVo.setParams(params);
         return resultVo;
     }
 
@@ -110,4 +122,11 @@ public class ResultVo<T> implements Serializable {
         this.data = data;
     }
 
+    public Object[] getParams() {
+        return params;
+    }
+
+    public void setParams(Object[] params) {
+        this.params = params;
+    }
 }

@@ -2,7 +2,9 @@ package com.wgc.springboottest.controller;
 
 import com.wgc.springboottest.dto.response.ResultVo;
 import com.wgc.springboottest.entity.AuthUserDO;
+import com.wgc.springboottest.entity.DeptDO;
 import com.wgc.springboottest.service.AuthUserSerivce;
+import com.wgc.springboottest.service.DeptService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -12,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author 翁国超
@@ -26,6 +29,9 @@ import javax.annotation.Resource;
 public class UserController {
     @Resource
     private AuthUserSerivce authUserSerivce;
+    @Resource
+    private DeptService deptService;
+
 
     @PostMapping("saveOrUpdate")
     @ApiOperation(value = "用户信息创建或更新接口",httpMethod = "POST",notes = "这是用户创建或更新接口的详细说明。")
@@ -44,6 +50,12 @@ public class UserController {
     public ResultVo<AuthUserDO> detial(@RequestParam(value = "id") Long id, @RequestParam(value = "password",required = false) String pwd){
         AuthUserDO authUserDO = authUserSerivce.detail(id, pwd);
         return ResultVo.success(authUserDO);
+    }
+
+    @GetMapping("list-depts")
+    public ResultVo<List<DeptDO>> listDepts(){
+        List<DeptDO> deptDOS = deptService.listDepts();
+        return ResultVo.success(deptDOS);
     }
 
 
