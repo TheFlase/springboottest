@@ -1,6 +1,7 @@
 package com.wgc.springboottest.exception;
 
 import com.wgc.springboottest.dto.response.ResultVo;
+import com.wgc.springboottest.utils.ResultCode;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +29,7 @@ public class GlobalExceptionHandler{
         String message = e.getMessage();
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         servletRequestAttributes.getResponse().setHeader("resultCode", "-1");
-        return ResultVo.faild(403,message);
+        return ResultVo.faild(message);
     }
 
     @ExceptionHandler({BusinessException.class})
@@ -37,7 +38,7 @@ public class GlobalExceptionHandler{
         String message = e.getMessage();
         ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         servletRequestAttributes.getResponse().setHeader("resultCode", "-2");
-        return ResultVo.faild(400,message);
+        return ResultVo.faild(-1,message);
     }
 
 }

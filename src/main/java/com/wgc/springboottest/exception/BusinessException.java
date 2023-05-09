@@ -1,40 +1,32 @@
 package com.wgc.springboottest.exception;
 
+import com.wgc.springboottest.utils.ResultCode;
+
 /**
  * @Author 翁国超
  * @Description //
  * @Date 2023/4/25
  **/
 public class BusinessException extends RuntimeException{
+    private final ResultCode resultCode;
 
-    private int code;
-    private String msg;
+    public ResultCode getResultCode() {
+        return resultCode;
+    }
 
-
-    public BusinessException(int code,String message) {
+    public BusinessException(String message) {
         super(message);
-        this.code = code;
+        this.resultCode = ResultCode.FAILURE;
     }
 
-    public BusinessException(int code,String message,  String msg) {
-        super(message);
-        this.code = code;
-        this.msg = msg;
+    public BusinessException(ResultCode resultCode) {
+        super(resultCode.getMessage());
+        this.resultCode = resultCode;
     }
 
-    public int getCode() {
-        return code;
+    public BusinessException(ResultCode resultCode, Throwable cause) {
+        super(resultCode.getMessage(), cause);
+        this.resultCode = resultCode;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
 }
