@@ -1,6 +1,9 @@
 package com.wgc.springboottest.controller;
 
-import com.wgc.springboottest.dto.response.ResultVo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.wgc.springboottest.dto.AuthUserListDTO;
+import com.wgc.springboottest.vo.AuthUserListVO;
+import com.wgc.springboottest.vo.ResultVo;
 import com.wgc.springboottest.entity.AuthUserDO;
 import com.wgc.springboottest.entity.DeptDO;
 import com.wgc.springboottest.service.AuthUserSerivce;
@@ -41,6 +44,23 @@ public class UserController {
         return ResultVo.success();
     }
 
+    @GetMapping("list-users")
+    public ResultVo<List<AuthUserDO>> listUsers(){
+        List<AuthUserDO> userDOS = authUserSerivce.selectAll();
+        return ResultVo.success(userDOS);
+    }
+
+    /**
+     * 用户信息分页查询
+     * @param listDTO
+     * @return
+     */
+    @PostMapping("list-users-pages")
+    public ResultVo<IPage<AuthUserListVO>> listUsersPages(@RequestBody AuthUserListDTO listDTO){
+        IPage<AuthUserListVO> listIPage = authUserSerivce.listUsersPages(listDTO);
+        return ResultVo.success(listIPage);
+    }
+
 
     @GetMapping("detail")
     @ApiImplicitParams({
@@ -50,6 +70,13 @@ public class UserController {
     public ResultVo<AuthUserDO> detial(@RequestParam(value = "id") Long id, @RequestParam(value = "password",required = false) String pwd){
         AuthUserDO authUserDO = authUserSerivce.detail(id, pwd);
         return ResultVo.success(authUserDO);
+    }
+
+    @PostMapping("saveOrUpdateDept")
+    @ApiOperation(value = "部门信息创建或更新接口")
+//    @HasPermissions("delete:commodity")
+    public ResultVo saveOrUpdateUserDept(@RequestBody DeptDO deptDO){
+        return ResultVo.success();
     }
 
     @GetMapping("list-depts")

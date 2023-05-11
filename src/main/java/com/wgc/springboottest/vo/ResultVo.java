@@ -1,4 +1,4 @@
-package com.wgc.springboottest.dto.response;
+package com.wgc.springboottest.vo;
 
 
 import com.wgc.springboottest.utils.ResultCode;

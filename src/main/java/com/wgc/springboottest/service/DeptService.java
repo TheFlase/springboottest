@@ -10,5 +10,9 @@ import java.util.List;
  * @Date 2023/5/9
  **/
 public interface DeptService {
+
+    int saveOrUpdateUserDept(DeptDO deptDO);
+
+
     List<DeptDO> listDepts();
 }

@@ -3,6 +3,8 @@ package com.wgc.springboottest.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author 翁国超
  * @Description //
@@ -10,7 +12,7 @@ import lombok.Data;
  **/
 @Data
 @TableName("dept")
-public class DeptDO {
+public class DeptDO implements Serializable {
 
     private String dept;
 

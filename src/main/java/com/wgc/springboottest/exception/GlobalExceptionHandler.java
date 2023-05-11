@@ -1,6 +1,6 @@
 package com.wgc.springboottest.exception;
 
-import com.wgc.springboottest.dto.response.ResultVo;
+import com.wgc.springboottest.vo.ResultVo;
 import com.wgc.springboottest.utils.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

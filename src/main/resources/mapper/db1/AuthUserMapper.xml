@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wgc.springboottest.dao.db1.AuthUserMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wgc.springboottest.entity.AuthUserDO">
+        <id column="id" property="id" />
+        <result column="dept_code" property="deptCode" />
+        <result column="job_number" property="jobNumber" />
+        <result column="user_name" property="userName" />
+        <result column="account_state" property="accountState" />
+        <result column="created_by" property="createdBy" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, dept_code deptCode,job_number jobNumber,user_name,account_state,
+         created_by createdBy
+    </sql>
+
+    <select id="selectAll" resultType="com.wgc.springboottest.entity.AuthUserDO">
+        select * from auth_user where 1=1
+    </select>
+
+    <update id="updateByAuthId">
+        update auth_user
+        <set>
+            <if test="deptCode != null and deptCode !=''">
+                 `dept_code` =#{deptCode},
+            </if>
+            <if test="jobNumber != null and jobNumber !=''">
+                 `job_number` =#{jobNumber},
+            </if>
+            <if test="userName != null and userName !=''">
+                 `user_name` =#{userName},
+            </if>
+            <if test="accountState != null">
+                 `account_state` =#{accountState},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <select id="listPages" resultType="com.wgc.springboottest.vo.AuthUserListVO">
+        select <include refid="Base_Column_List"></include>
+        from  auth_user
+        <where>
+            <if test="pageParam.jobNumber != null and pageParam.jobNumber !=''">
+                `job_number` like concat('%',#{pageParam.jobNumber},'%')
+            </if>
+        </where>
+        order by created_time desc
+    </select>
+
+
+</mapper>
